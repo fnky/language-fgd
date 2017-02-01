@@ -1,0 +1,21 @@
+{
+  "name": "language-fgd",
+  "version": "0.0.0",
+  "description": "FGD (Forge Game Data) language support in Atom",
+  "keywords": [
+    "fgd",
+    "forge game data"
+  ],
+  "homepage": "https://github.com/fnky/language-fgd",
+  "repository": "https://github.com/fnky/language-fgd",
+  "license": "MIT",
+  "engines": {
+    "atom": "*",
+    "node": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/fnky/language-fgd/issues"
+  },
+  "dependencies": {
+  }
+}

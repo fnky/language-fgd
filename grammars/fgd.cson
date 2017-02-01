@@ -1,0 +1,187 @@
+'scopeName': 'source.fgd'
+'name': 'Forge Game Data'
+'fileTypes': [
+  'fgd'
+]
+'patterns': [
+  {
+    'include': '#string'
+  }
+  {
+    'include': '#comments'
+  }
+  {
+    'include': '#number'
+  }
+  {
+    # keyvalue declaration foo(Arg)
+    'begin': '''(?x)
+      (?=
+        (                           # method name
+          [A-Za-z_][A-Za-z0-9_]*    # exact name
+        )
+        \\(                         # argument start
+          ([^)]*)                   # argument list
+        \\)\\s*                     # argument end
+      )
+    '''
+    'end': '(?<=\\))'
+    'patterns': [
+      {
+        'begin': '\\G'
+        'end': '(?<=\\))'
+        'name': 'meta.function.method.definition.fgd'
+        'patterns': [
+          {
+            'match': '\\b([A-Za-z_][A-Za-z0-9_]*)'
+            'name': 'entity.name.function.fgd'
+          }
+          {
+            'include': '#function_params'
+          }
+        ]
+      }
+    ]
+  }
+  {
+    # entity declaration (= entity_name : "description")
+    'match': '''(?x)
+      (?:
+        (
+          \\=
+        )\\s*
+        (
+          [A-Za-z_][A-Za-z0-9_]*    # entity name
+        )\\s*
+        (
+          \\:
+        )?\\s*
+      )
+    '''
+    'captures':
+      '1':
+        'name': 'keyword.operator.assignment.fgd'
+      '2':
+        'name': 'support.class.fgd'
+      '3':
+        'name': 'keyword.operator.descriptor.fgd'
+    'name': 'meta.class.fgd'
+  }
+  {
+    'match': '\\b(string|integer|float|choices|void|flags)\\b'
+    'name': 'storage.type.fgd'
+  }
+  {
+    'match': '\\b(axis|angle|color(255|1)|filterclass|material|node_dest|npcclass|origin|pointentityclass|scene|sidelist|sound|sprite|studio|target(_destination|_name_or_class|_source)|vecline|vector)\\b'
+    'name': 'support.type.fgd'
+  }
+  {
+    'match': '\\@include'
+    'name': 'keyword.control.import.include.fgd'
+  }
+  {
+    'match': '\\@(BaseClass|FilterClass|KeyFrameClass|MoveClass|NPCClass|PointClass|SolidClass)'
+    'name': 'support.class.fgd'
+  }
+  {
+    'match': '\\b(input|output|readonly)\\b'
+    'name': 'keyword.control.fgd'
+  }
+]
+'repository':
+  'function_params':
+    'patterns': [
+      {
+        'begin': '\\('
+        'beginCaptures':
+          '0':
+            'name': 'punctuation.definition.parameters.begin.bracket.round.fgd'
+        'end': '\\)'
+        'endCaptures':
+          '0':
+            'name': 'punctuation.definition.parameters.end.bracket.round.fgd'
+        'name': 'meta.parameters.fgd'
+        'patterns': [
+          {
+            'include': '#string'
+          }
+          {
+            'include': '$self'
+          }
+          {
+            'match': '[A-Za-z_][A-Za-z0-9_]*'
+            'name': 'variable.parameter.function.fgd'
+          }
+        ]
+      }
+    ]
+  'string':
+    'begin': '"'
+    'beginCaptures':
+      '0':
+        'name': 'punctuation.definition.string.begin.fgd'
+    'end': '"'
+    'endCaptures':
+      '0':
+        'name': 'punctuation.definition.string.end.fgd'
+    'name': 'string.quoted.double.fgd'
+    'patterns': [
+      {
+        'match': '''(?x)
+          \\\\                # a literal backslash
+          (                   # followed by
+            ["\\\\/bfnrt]     # one of these characters
+            |                 # or
+            u[0-9a-fA-F]{4}   # a u and four hex digits
+          )
+        '''
+        'name': 'constant.character.escape.fgd'
+      }
+      {
+        'match': '\\\\.'
+        'name': 'invalid.illegal.unrecognized-string-escape.fgd'
+      }
+    ]
+  # 'number':
+  #   'match': '-?(?=[1-9]|0(?!\\d))\\d+(\\.\\d+)?([eE][+-]?\\d+)?'
+  #   'name': 'constant.numeric.fgd'
+  'number':
+    'match': '''(?x)
+      (?<!\\$)(?:
+        (?:\\b[0-9]+(\\.)[0-9]+[eE][+-]?[0-9]+\\b)| # 1.1E+3
+        (?:\\b[0-9]+(\\.)[eE][+-]?[0-9]+\\b)|       # 1.E+3
+        (?:\\B(\\.)[0-9]+[eE][+-]?[0-9]+\\b)|       # .1E+3
+        (?:\\b[0-9]+[eE][+-]?[0-9]+\\b)|            # 1E+3
+        (?:\\b[0-9]+(\\.)[0-9]+\\b)|                     # 1.1
+        (?:\\b[0-9]+(\\.)\\B)|                      # 1.
+        (?:\\B(\\.)[0-9]+\\b)|                      # .1
+        (?:\\b[0-9]+\\b(?!\\.))                     # 1
+      )(?!\\$)
+    '''
+    'captures':
+      '0':
+        'name': 'constant.numeric.fgd'
+      '1':
+        'name': 'invalid.illegal.fgd'
+      '2':
+        'name': 'invalid.illegal.fgd'
+      '3':
+        'name': 'invalid.illegal.fgd'
+      '4':
+        'name': 'invalid.illegal.fgd'
+      '5':
+        'name': 'invalid.illegal.fgd'
+      '6':
+        'name': 'invalid.illegal.fgd'
+    # 'name': 'constant.numeric.fgd'
+  'comments':
+    'patterns': [
+      {
+        'begin': '//'
+        'beginCaptures':
+          '0':
+            'name': 'punctuation.definition.comment.fgd'
+        'end': '$'
+        'name': 'comment.line.double-slash.fgd'
+      }
+    ]

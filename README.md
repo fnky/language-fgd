@@ -17,7 +17,6 @@ Adds syntax highlighting and snippts for FGD (Forge Game Data) files in Atom.
 | mc            | move class               | @MoveClass ... |
 | fc            | filter class             | @FilterClass ... |
 | prop          | property                 | property_name(type) : "description" : default value |
-```
 
 ## Install
 
